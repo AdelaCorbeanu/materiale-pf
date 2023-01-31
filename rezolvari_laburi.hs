@@ -35,6 +35,7 @@ listadiv nr = [divizori x | x <- nr]
 
 
 
+
 inIntervalRec :: Int -> Int -> [Int] -> [Int]
 inIntervalRec a b [] = []
 inIntervalRec a b nr = if (head nr >= a && head nr <= b) 
