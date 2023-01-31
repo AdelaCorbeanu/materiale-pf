@@ -47,5 +47,47 @@ instance Applicative (ReaderWriter env) where
 
 instance Functor (ReaderWriter env) where              
   fmap f ma = pure f <*> ma  
+  
+  
+  
+  
+  
+  -- rezolvarile mele:
+  
+  data Point = Pt [Int]
+    deriving Show
+
+data Arb = Empty | Node Int Arb Arb
+    deriving Show
+
+class ToFromArb a where
+    toArb :: a -> Arb
+    fromArb :: Arb -> a
+
+pointToList :: Point -> [Int] 
+pointToList (Pt l) = l
+
+instance ToFromArb Point where
+    toArb (Pt []) = Empty
+    toArb (Pt [x]) = Node x Empty Empty
+    toArb (Pt l) = let m = head l in 
+                    Node m (toArb (Pt [x | x <- (tail l), x <= m])) (toArb (Pt [x | x <- (tail l), x > m]))
+    fromArb Empty = Pt []
+    fromArb (Node x st dr) = Pt (x : ((pointToList (fromArb st)) ++ (pointToList (fromArb dr))))
+    
+
+
+
+getFromInterval :: Int -> Int -> [Int] -> [Int]
+getFromInterval a b l = [x | x <- l, x >= a, x <= b]
+
+getFromInterval' a b l = do {
+    x <- l;
+    if (x >= a && x <= b) 
+        then return x
+        else []
+}
+  
+  
 
  
